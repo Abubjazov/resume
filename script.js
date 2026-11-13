@@ -3,7 +3,7 @@ if (motionAllowed && 'IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
   }, { threshold: 0.08 });
-  document.querySelectorAll('.opening,.intro-grid,.process,.company,.qiwi-grid,.skills,.education,.telegram-invite').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
+  document.querySelectorAll('.opening,.intro-grid,.process,.company,.skills,.education,.telegram-invite').forEach(el => { el.classList.add('reveal'); observer.observe(el); });
 }
 document.querySelector('.copy').addEventListener('click', async () => {
   const status = document.querySelector('#copy-status');
