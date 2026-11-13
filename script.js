@@ -11,12 +11,9 @@ document.querySelector('.copy').addEventListener('click', async () => {
   catch { status.textContent = 'Email: abubjazov@mail.ru'; }
 });
 
-// Open each experience once as its toggle crosses the middle of the viewport.
 // Native details semantics and keyboard interaction remain available.
 const experienceCases = [...document.querySelectorAll('#experience details.case')];
-const visitedCases = new WeakSet();
 const caseAnimations = new WeakMap();
-const centers = new WeakMap();
 const desiredStates = new WeakMap();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 function setCaseOpen(details, opening) {
@@ -54,38 +51,8 @@ function setCaseOpen(details, opening) {
   };
 }
 experienceCases.forEach(details => {
-  const toggle = details.querySelector('.toggle');
-  centers.set(details, toggle.getBoundingClientRect().top + toggle.getBoundingClientRect().height / 2);
   details.querySelector('summary').addEventListener('click', event => {
     event.preventDefault();
-    visitedCases.add(details);
     setCaseOpen(details, !(desiredStates.get(details) ?? details.open));
-  });
-});
-let lastScrollY = window.scrollY;
-let scrollFramePending = false;
-function checkCasePositions() {
-  scrollFramePending = false;
-  const downward = window.scrollY > lastScrollY;
-  const middle = window.innerHeight / 2;
-  lastScrollY = window.scrollY;
-  experienceCases.forEach(details => {
-    const rect = details.querySelector('.toggle').getBoundingClientRect();
-    const center = rect.top + rect.height / 2;
-    const previousCenter = centers.get(details);
-    if (downward && !visitedCases.has(details) && previousCenter > middle && center <= middle) {
-      visitedCases.add(details);
-      setCaseOpen(details, true);
-    }
-    centers.set(details, center);
-  });
-}
-window.addEventListener('scroll', () => {
-  if (!scrollFramePending) { scrollFramePending = true; requestAnimationFrame(checkCasePositions); }
-}, {passive:true});
-window.addEventListener('resize', () => {
-  experienceCases.forEach(details => {
-    const rect=details.querySelector('.toggle').getBoundingClientRect();
-    centers.set(details,rect.top+rect.height/2);
   });
 });
